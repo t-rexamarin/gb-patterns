@@ -1,0 +1,1 @@
+python run.py запустит проект на localhost:8080
