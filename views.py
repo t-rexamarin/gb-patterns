@@ -1,6 +1,6 @@
 from homunculus_framework.templator import render
 from homunculus_framework.views import BaseView
-from homunculus_framework.utils import ResponseCodes as response
+from homunculus_framework.utils import ResponseCodes as Response
 
 
 class IndexView(BaseView):
@@ -9,7 +9,7 @@ class IndexView(BaseView):
 
     def __call__(self, request: dict):
         request['title'] = self.title
-        return response.code_200, render(template_name=self.template_name, props=request)
+        return Response.code_200, render(template_name=self.template_name, props=request)
 
 
 class AboutView(BaseView):
@@ -18,7 +18,7 @@ class AboutView(BaseView):
 
     def __call__(self, request, **kwargs):
         request['title'] = self.title
-        return response.code_200, render(template_name=self.template_name, props=request)
+        return Response.code_200, render(template_name=self.template_name, props=request)
 
 
 class PricingView(BaseView):
@@ -27,4 +27,16 @@ class PricingView(BaseView):
 
     def __call__(self, request, **kwargs):
         request['title'] = self.title
-        return response.code_200, render(template_name=self.template_name, props=request)
+        return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class ContactUsView(BaseView):
+    template_name = 'contact_us.html'
+    title = 'Обратная связь'
+
+    def __call__(self, request, **kwargs):
+        if request.get('post_data'):
+            request['msg_success'] = True
+
+        request['title'] = self.title
+        return Response.code_200, render(template_name=self.template_name, props=request)

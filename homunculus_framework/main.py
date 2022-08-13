@@ -2,7 +2,8 @@ from os import path
 
 from homunculus_framework.content_types import CONTENT_TYPES_MAP
 from homunculus_framework.views import PageNotFound404
-from homunculus_framework.utils import ResponseCodes as response
+from homunculus_framework.utils import ResponseCodes as Response
+from homunculus_framework.requests import GetRequest, PostRequest
 
 
 class Framework:
@@ -12,33 +13,41 @@ class Framework:
         self.settings = settings
 
     def __call__(self, environ: dict, start_response):
-        path: str = environ['PATH_INFO']
-
-        if not path.endswith('/'):
-            path = f'{path}/'
-
+        _path: str = environ['PATH_INFO']
+        request_method: str = environ['REQUEST_METHOD']
         request = {}
-        for front in self.fronts:
-            front(request)
 
-        if path in self.routes:
-            view = self.routes[path]
-            content_type = self.get_content_type(path)
+        if not _path.endswith('/'):
+            _path = f'{_path}/'
+
+        if request_method == 'POST':
+            post_data = PostRequest().get_request_params(environ)
+            request['post_data'] = post_data
+        if request_method == 'GET' and not _path.startswith(self.settings.STATIC_URL):
+            request_params = GetRequest().get_query_string(environ)
+            request['request_params'] = request_params
+            # print(f'Получены get параметры {request_params}')
+
+        if _path in self.routes:
+            view = self.routes[_path]
+            content_type = self.get_content_type(_path)
             code, body = view(request)
             body = body.encode('utf-8')
-        elif path.startswith(self.settings.STATIC_URL):
-            file_path = path[len(self.settings.STATIC_URL):len(path) - 1]
+        elif _path.startswith(self.settings.STATIC_URL):
+            file_path = _path[len(self.settings.STATIC_URL):len(_path) - 1]
             # print(file_path)
             content_type = self.get_content_type(file_path)
             # print(content_type)
             code, body = self.get_static(self.settings.STATIC_FILES_DIR, file_path)
         else:
             view = PageNotFound404()
-            content_type = self.get_content_type(path)
+            content_type = self.get_content_type(_path)
             code, body = view(request)
             body = body.encode('utf-8')
 
-        # code, body = view(request)
+        for front in self.fronts:
+            front(request)
+
         start_response(code, [('Content-Type', content_type)])
         return [body]
 
@@ -47,7 +56,7 @@ class Framework:
         path_to_file = path.join(static_dir, file_path)
         with open(path_to_file, 'rb') as f:
             file_content = f.read()
-        status_code = response.code_200
+        status_code = Response.code_200
         return status_code, file_content
 
     @staticmethod

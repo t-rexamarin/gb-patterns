@@ -1,14 +1,14 @@
-from abc import abstractmethod
+import abc
 
 from homunculus_framework.templator import render
-from homunculus_framework.utils import ResponseCodes as response
+from homunculus_framework.utils import ResponseCodes as Response
 
 
-class BaseView:
+class BaseView(abc.ABC):
     template_name: str = None
     title: str = None
 
-    @abstractmethod
+    @abc.abstractmethod
     def __call__(self, *args, **kwargs) -> tuple[str, str]:
         return '', render(template_name=self.template_name, folder='templates', **kwargs)
 
@@ -18,7 +18,7 @@ class PageNotFound404(BaseView):
     title = 'Страница не найдена'
 
     def __call__(self, *args, **kwargs):
-        return response.code_404, render(
+        return Response.code_404, render(
             template_name=self.template_name,
             folder='homunculus_framework/base_templates',
             **kwargs
