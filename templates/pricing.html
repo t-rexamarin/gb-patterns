@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <td>
+                Название
+            </td>
+            <td>
+                Описание
+            </td>
+            <td>
+                Преподаватель
+            </td>
+            <td>
+                Стоимость
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in props.courses.values() %}
+            <tr>
+                <td>
+                    {{ course.name }}
+                </td>
+                <td>
+                    {{ course.description }}
+                </td>
+                <td>
+                    {{ course.teacher }}
+                </td>
+                <td>
+                    {{ course.price }}
+                </td>
+            </tr>
+        {% endfor%}
+    </tbody>
+</table>
+<div class="mt-3 mx-auto text-center" style="width: 400px">
+    <form method="post" class="row row-cols-lg-auto g-3">
+        <div class="mx-auto">
+            <p>Выберите курс:</p>
+            <select name="course" class="mb-2">
+                {% for course in props.courses.values() %}
+                    <option value="{{ course.id }}">{{ course.name }}</option>
+                {% endfor %}
+            </select>
+            <div>
+                <button type="submit" class="btn btn-primary btn-block">Купить</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
