@@ -24,9 +24,33 @@ class AboutView(BaseView):
 class PricingView(BaseView):
     template_name = 'pricing.html'
     title = 'Цены'
+    courses = {
+        'programming': {
+            'id': 1,
+            'name': 'Программирование',
+            'description': 'Супер-пупер курс по программированию от первой женщины программиста.',
+            'price': 20000,
+            'teacher': 'Ада Лавлейс'
+        },
+        'painting': {
+            'id': 2,
+            'name': 'Рисование',
+            'description': 'Учимся использовать кисти с мастером своего дела.',
+            'price': 15000,
+            'teacher': 'Боб Росс'
+        },
+        'physics': {
+            'id': 3,
+            'name': 'Физика',
+            'description': 'Познаем таинственную природу происходящих вокруг процессов.',
+            'price': 15000,
+            'teacher': 'Альберт Франкенштейн'
+        }
+    }
 
     def __call__(self, request, **kwargs):
         request['title'] = self.title
+        request['courses'] = self.courses
         return Response.code_200, render(template_name=self.template_name, props=request)
 
 
