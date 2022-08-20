@@ -1,6 +1,10 @@
+from homunculus_framework.patterns import Engine
 from homunculus_framework.templator import render
 from homunculus_framework.views import BaseView
 from homunculus_framework.utils import ResponseCodes as Response
+
+
+site = Engine()
 
 
 class IndexView(BaseView):
@@ -64,3 +68,20 @@ class ContactUsView(BaseView):
 
         request['title'] = self.title
         return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class CreateCategoryView(BaseView):
+    template_name = 'create_category.html'
+    title = 'Создание категории'
+
+    def __call__(self, request, **kwargs):
+        request['title'] = self.title
+
+        if request['method'] == 'POST':
+            data = request['data']
+            category_name = data['categoryName']
+            print(category_name)
+
+            return Response.code_200, render(template_name=self.template_name, props=request)
+        else:
+            return Response.code_200, render(template_name=self.template_name, props=request)

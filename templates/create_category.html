@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if props.msg_success %}
+    {% include "components/send_msg_success.html" %}
+{% endif %}
+
+<div style="width: 400px" class="mx-auto">
+<form method="post">
+    <div class="form-outline mb-4">
+        <input type="text" id="form4Example1" name="categoryName" class="form-control" />
+        <label class="form-label" for="form4Example1">Название категории</label>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Отправить</button>
+</form>
+</div>
+{% endblock %}

@@ -14,15 +14,16 @@ class Framework:
 
     def __call__(self, environ: dict, start_response):
         _path: str = environ['PATH_INFO']
-        request_method: str = environ['REQUEST_METHOD']
         request = {}
+        request_method: str = environ['REQUEST_METHOD']
+        request['method'] = request_method
 
         if not _path.endswith('/'):
             _path = f'{_path}/'
 
         if request_method == 'POST':
             post_data = PostRequest().get_request_params(environ)
-            request['post_data'] = post_data
+            request['data'] = post_data
         if request_method == 'GET' and not _path.startswith(self.settings.STATIC_URL):
             request_params = GetRequest().get_query_string(environ)
             request['request_params'] = request_params
