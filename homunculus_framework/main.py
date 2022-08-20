@@ -1,7 +1,7 @@
 from os import path
 
 from homunculus_framework.content_types import CONTENT_TYPES_MAP
-from homunculus_framework.views import PageNotFound404
+from homunculus_framework.base_views import PageNotFound404
 from homunculus_framework.utils import ResponseCodes as Response
 from homunculus_framework.requests import GetRequest, PostRequest
 

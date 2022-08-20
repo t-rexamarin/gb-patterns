@@ -1,5 +1,5 @@
 from homunculus_framework.templator import render
-from homunculus_framework.views import BaseView
+from homunculus_framework.base_views import BaseView
 from homunculus_framework.utils import ResponseCodes as Response
 
 
