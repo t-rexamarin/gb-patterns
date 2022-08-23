@@ -1,4 +1,4 @@
-from homunculus_framework.patterns import Engine
+from homunculus_framework.patterns import Engine, CourseFactory
 from homunculus_framework.templator import render
 from homunculus_framework.views import BaseView
 from homunculus_framework.utils import ResponseCodes as Response
@@ -70,7 +70,7 @@ class ContactUsView(BaseView):
         return Response.code_200, render(template_name=self.template_name, props=request)
 
 
-class CreateCategoryView(BaseView):
+class CategoryCreateView(BaseView):
     template_name = 'create_category.html'
     title = 'Создание категории'
 
@@ -80,8 +80,75 @@ class CreateCategoryView(BaseView):
         if request['method'] == 'POST':
             data = request['data']
             category_name = data['categoryName']
-            print(category_name)
+            # print(category_name)
+            category = site.create_category(name=category_name)
+            site.categories.append(category)
+            self.template_name = 'list_categories.html'
+            # return Response.code_200, render(template_name='list_categories.html', props=request)
+        # else:
+        #     return Response.code_200, render(template_name=self.template_name, props=request)
 
-            return Response.code_200, render(template_name=self.template_name, props=request)
-        else:
-            return Response.code_200, render(template_name=self.template_name, props=request)
+        categories = site.categories
+        request['categories'] = categories
+        return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class CategoryListView(BaseView):
+    template_name = 'list_categories.html'
+    title = 'Категории курсов'
+
+    def __call__(self, request, **kwargs):
+        categories = site.categories
+        request['categories'] = categories
+        return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class CourseCreateView(BaseView):
+    template_name = 'create_course.html'
+    title = 'Создание курса'
+
+    def __call__(self, request, **kwargs):
+        request['title'] = self.title
+
+        if request['method'] == 'POST':
+            data = request['data']
+            course_category = data['courseCategory']
+            course_name = data['courseName']
+            course_type = data['courseType']
+            course_place = data['coursePlace']
+            # print(category_name)
+
+            category = site.find_category_by_id(int(course_category))
+
+            course = site.create_course(type_=course_type, name=course_name, category=category, location=course_place)
+            site.courses.append(course)
+            self.template_name = 'list_courses.html'
+        #     categories = site.categories
+        #     request['categories'] = categories
+        #     course_types = CourseFactory.types
+        #     request['courseTypes'] = course_types
+        #     return Response.code_200, render(template_name='list_courses.html', props=request)
+        # else:
+        #     categories = site.categories
+        #     request['categories'] = categories
+        #     course_types = CourseFactory.types
+        #     request['courseTypes'] = course_types
+        #     return Response.code_200, render(template_name=self.template_name, props=request)
+
+        courses = site.courses
+        request['courses'] = courses
+        categories = site.categories
+        request['categories'] = categories
+        course_types = CourseFactory.types
+        request['courseTypes'] = course_types
+        return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class CourseListView(BaseView):
+    template_name = 'list_courses.html'
+    title = 'Список курсов'
+
+    def __call__(self, request, **kwargs):
+        courses = site.courses
+        request['courses'] = courses
+        return Response.code_200, render(template_name=self.template_name, props=request)
