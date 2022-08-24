@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    {% if props.courses %}
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <td>
+                    Название курса
+                </td>
+                <td>
+                    Категория
+                </td>
+                <td>
+                    Где проходит
+                </td>
+                <td>
+                    Копировать курс
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in props.courses %}
+                <tr>
+                    <td>
+                        {{ course.name }}
+                    </td>
+                    <td>
+                        {{ course.category.name }}
+                    </td>
+                    <td>
+                        {{ course.location }}
+                    </td>
+                    <td>
+                        <form action="/copy_course/" method="post">
+                            <input type="hidden" name="courseName" value="{{ course.name }}">
+                            <input type="submit" value="Копировать курс">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+    {% else %}
+        <div style="width: 400px" class="mx-auto">
+            <p>Нет курсов для отображения</p>
+        </div>
+    {% endif %}
+    <p>
+        <a href="/create_course/">К списку курсов</a>
+    </p>
+</div>
+{% endblock %}

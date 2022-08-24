@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    {% if props.categories %}
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-dark">
+            <tr>
+                <td>
+                    ID категории
+                </td>
+                <td>
+                    Название категории
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in props.categories %}
+                <tr>
+                    <td>
+                        {{ category.id }}
+                    </td>
+                    <td>
+                        {{ category.name }}
+                    </td>
+                </tr>
+            {% endfor%}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="width: 400px" class="mx-auto">
+        <p>Нет категорий для отображения</p>
+    </div>
+    {% endif %}
+    <p>
+        <a href="/create_category/">К созданию категорий</a>
+    </p>
+</div>
+{% endblock %}

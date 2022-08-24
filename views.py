@@ -80,13 +80,9 @@ class CategoryCreateView(BaseView):
         if request['method'] == 'POST':
             data = request['data']
             category_name = data['categoryName']
-            # print(category_name)
             category = site.create_category(name=category_name)
             site.categories.append(category)
             self.template_name = 'list_categories.html'
-            # return Response.code_200, render(template_name='list_categories.html', props=request)
-        # else:
-        #     return Response.code_200, render(template_name=self.template_name, props=request)
 
         categories = site.categories
         request['categories'] = categories
@@ -116,24 +112,10 @@ class CourseCreateView(BaseView):
             course_name = data['courseName']
             course_type = data['courseType']
             course_place = data['coursePlace']
-            # print(category_name)
-
             category = site.find_category_by_id(int(course_category))
-
             course = site.create_course(type_=course_type, name=course_name, category=category, location=course_place)
             site.courses.append(course)
             self.template_name = 'list_courses.html'
-        #     categories = site.categories
-        #     request['categories'] = categories
-        #     course_types = CourseFactory.types
-        #     request['courseTypes'] = course_types
-        #     return Response.code_200, render(template_name='list_courses.html', props=request)
-        # else:
-        #     categories = site.categories
-        #     request['categories'] = categories
-        #     course_types = CourseFactory.types
-        #     request['courseTypes'] = course_types
-        #     return Response.code_200, render(template_name=self.template_name, props=request)
 
         courses = site.courses
         request['courses'] = courses
@@ -141,6 +123,24 @@ class CourseCreateView(BaseView):
         request['categories'] = categories
         course_types = CourseFactory.types
         request['courseTypes'] = course_types
+        return Response.code_200, render(template_name=self.template_name, props=request)
+
+
+class CourseCopyView(BaseView):
+    template_name = 'list_courses.html'
+
+    def __call__(self, request, **kwargs):
+        data = request['data']
+        course_name = data['courseName']
+        course = site.get_course(course_name)
+
+        if course:
+            new_course = course.clone()
+            new_course.name += '_copy'
+            site.courses.append(new_course)
+
+        courses = site.courses
+        request['courses'] = courses
         return Response.code_200, render(template_name=self.template_name, props=request)
 
 

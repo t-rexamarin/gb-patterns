@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="width: 400px" class="mx-auto text-center">
+    <form method="post">
+        <div class="mb-1">
+            <p style="margin: 5px">Категория курса:</p>
+            <select name="courseCategory">
+                {% for category in props.categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <p style="margin: 5px">Тип курса:</p>
+            <select name="courseType">
+                {% for type in props.courseTypes %}
+                <option value="{{ type }}">{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-outline mb-4">
+            <input type="text" id="courseName" name="courseName" class="form-control" />
+            <label class="form-label" for="courseName">Название курса</label>
+        </div>
+        <div class="form-outline mb-4">
+            <input type="text" id="coursePlace" name="coursePlace" class="form-control" />
+            <label class="form-label" for="coursePlace">Где проходит курс</label>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Отправить</button>
+    </form>
+    <p>
+        <a href="/list_courses/">К списку курсов</a>
+    </p>
+</div>
+{% endblock %}

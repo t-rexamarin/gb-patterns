@@ -4,6 +4,10 @@ from homunculus_framework.content_types import CONTENT_TYPES_MAP
 from homunculus_framework.views import PageNotFound404
 from homunculus_framework.utils import ResponseCodes as Response
 from homunculus_framework.requests import GetRequest, PostRequest
+from homunculus_framework.logger import Logger
+
+
+main_logger = Logger(name='main')
 
 
 class Framework:
@@ -24,9 +28,11 @@ class Framework:
         if request_method == 'POST':
             post_data = PostRequest().get_request_params(environ)
             request['data'] = post_data
+            main_logger().debug(f"Получен POST запрос {request['data']}")
         if request_method == 'GET' and not _path.startswith(self.settings.STATIC_URL):
             request_params = GetRequest().get_query_string(environ)
             request['request_params'] = request_params
+            main_logger().debug(f"Получен GET запрос {request['request_params']}")
             # print(f'Получены get параметры {request_params}')
 
         if _path in self.routes:
